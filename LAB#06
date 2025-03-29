@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(ChatApp());
+}
+
+class ChatApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ChatScreen(),
+    );
+  }
+}
+
+class ChatScreen extends StatelessWidget {
+  final List<Map<String, dynamic>> messages = [
+    {"text": "Hi Sir", "isMe": false},
+    {"text": "What are we going to make today", "isMe": false},
+    {"text": "Hi Ali!", "isMe": true},
+    {"text": "we are making a Chat application", "isMe": true},
+    {"text": "What is this application going to do", "isMe": false},
+    {"text": "It'll simulate the UI of a chat application", "isMe": true},
+    {"text": "That sounds funnn", "isMe": false},
+    {"text": "but how are we going make it", "isMe": false},
+    {
+      "text": "we are going to use the following Widget : \nListView, Container, Align",
+      "isMe": true
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Chat"),
+        backgroundColor: Colors.blue,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: ListView.builder(
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            return ChatBubble(
+              message: messages[index]["text"],
+              isMe: messages[index]["isMe"],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class ChatBubble extends StatelessWidget {
+  final String message;
+  final bool isMe;
+
+  ChatBubble({required this.message, required this.isMe});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isMe ? Colors.blue : Colors.grey[300],
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+            bottomLeft: isMe ? Radius.circular(15) : Radius.zero,
+            bottomRight: isMe ? Radius.zero : Radius.circular(15),
+          ),
+        ),
+        child: Text(
+          message,
+          style: TextStyle(color: isMe ? Colors.white : Colors.black, fontSize: 16),
+        ),
+      ),
+    );
+  }
+}
