@@ -1,0 +1,260 @@
+QUESTION 1
+
+	import 'dart:math';
+	import 'package:flutter/material.dart';
+	
+	void main() {
+	  runApp(DiceApp());
+	}
+	
+	class DiceApp extends StatelessWidget {
+	  @override
+	  Widget build(BuildContext context) {
+	    return MaterialApp(
+	      title: 'Dice Roller',
+	      theme: ThemeData(primarySwatch: Colors.red),
+	      home: DiceHomePage(),
+	      debugShowCheckedModeBanner: false,
+	    );
+	  }
+	}
+	
+	class DiceHomePage extends StatefulWidget {
+	  @override
+	  _DiceHomePageState createState() => _DiceHomePageState();
+	}
+	
+	class _DiceHomePageState extends State<DiceHomePage>
+	    with SingleTickerProviderStateMixin {
+	  int diceNumber = 1;
+	  late AnimationController _controller;
+	  late Animation<double> _rotationAnimation;
+	
+	  @override
+	  void initState() {
+	    super.initState();
+	    _controller = AnimationController(
+	      duration: Duration(milliseconds: 500),
+	      vsync: this,
+	    );
+	
+	    _rotationAnimation = Tween<double>(
+	      begin: 0,
+	      end: 2 * pi,
+	    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+	
+	    _controller.addStatusListener((status) {
+	      if (status == AnimationStatus.completed) {
+	        // After rotation completes, set new dice number
+	        setState(() {
+	          diceNumber = Random().nextInt(6) + 1;
+	        });
+	        _controller.reset(); // Ready for next roll
+	      }
+	    });
+	  }
+	
+	  void rollDice() {
+	    _controller.forward(); // Start animation
+	  }
+	
+	  @override
+	  void dispose() {
+	    _controller.dispose();
+	    super.dispose();
+	  }
+	
+   @override
+	  Widget build(BuildContext context) {
+	    return Scaffold(
+	      appBar: AppBar(
+	        title: Text('Dice Roller'),
+	        centerTitle: true,
+	        backgroundColor: Colors.pinkAccent,
+	      ),
+	      body: Center(
+	        child: Column(
+	          mainAxisAlignment: MainAxisAlignment.center,
+	          children: [
+	            AnimatedBuilder(
+	              animation: _rotationAnimation,
+	              builder: (context, child) {
+	                return Transform.rotate(
+	                  angle: _rotationAnimation.value,
+	                  child: Image.asset(
+	                    'assests/dice$diceNumber.png',
+	                    width: 150,
+	                    height: 150,
+	                  ),
+	                );
+	              },
+	            ),
+	
+	            ElevatedButton(
+	              onPressed: rollDice,
+	              child: Text('Roll Dice', style: TextStyle(fontSize: 18)),
+	            ),
+	          ],
+	        ),
+	      ),
+	    );
+
+
+
+
+QUESTION 2
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyInfoApp());
+}
+
+class MyInfoApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My Info App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: MyInfoHomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MyInfoHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3, // Three tabs
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('About Me'),
+          centerTitle: true,
+          backgroundColor: Colors.amberAccent,
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Introduction'),
+              Tab(text: 'Education'),
+              Tab(text: 'Hobbies'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // Tab 1: Introduction
+            Center(
+              child: Row(
+                children: [
+                  Container(
+                    height: 400,
+                    width: 1000,
+                    padding: EdgeInsets.all(20),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(fontSize: 25, color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: 'Hello! ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+
+                          TextSpan(
+                            text:
+                                "My name is Shehroz Zahid, a student of BSCS. This is my flutter course project.",
+                          ),
+
+                          TextSpan(
+                            text: 'I am learning flutter. ',
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+
+                          TextSpan(text: 'and solving real-world problems.'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    margin: EdgeInsets.all(150),
+                    height: 500,
+                    width: 500,
+                    child: CircleAvatar(
+                      radius: 20, // Image radius
+                      backgroundImage: AssetImage('assests/shehroz.png'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Tab 2: Education
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: 'Bachelor of Science in Computer Science\n',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.red,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'Bahria  University, 2022 - 2026\n',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      TextSpan(
+                        text:
+                            'Relevant courses: Flutter Development, Data Structures, UI/UX Design.',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Tab 3: Hobbies
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: '🎮 Gaming\n',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'I enjoy playing strategy and RPG games.\n\n',
+                      ),
+                      TextSpan(
+                        text: '📚 Reading\n',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'Mostly tech blogs and sci-fi novels.\n\n',
+                      ),
+                      TextSpan(
+                        text: '🎵 Music\n',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'Listening to lo-fi and instrumental tracks.',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
